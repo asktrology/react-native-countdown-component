@@ -24,6 +24,8 @@ const DEFAULT_TIME_LABELS = {
 };
 
 class CountDown extends React.Component {
+  subsrciption = null;
+  
   static propTypes = {
     id: PropTypes.string,
     digitStyle: PropTypes.object,
@@ -51,12 +53,14 @@ class CountDown extends React.Component {
   }
 
   componentDidMount() {
-    AppState.addEventListener('change', this._handleAppStateChange);
+    this.subsrciption = AppState.addEventListener('change', this._handleAppStateChange);
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
-    AppState.removeEventListener('change', this._handleAppStateChange);
+    if (this.subsrciption) {
+      this.subsrciption.remove();
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
